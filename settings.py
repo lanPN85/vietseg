@@ -1,0 +1,13 @@
+# Word2Vec Settings
+VEC_SIZE = 100
+MIN_WORD_THRES = 7
+WORKERS = 4
+WINDOW_SIZE = 10
+DOWN_SAMPLING = 1e-3
+
+# Tokenizer settings
+HIDDEN = 30
+EPOCHS = 30
+MINI_BATCH_SIZE = 10
+ETA = 0.5
+LAMBDA = 5.0

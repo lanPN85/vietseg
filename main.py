@@ -3,31 +3,35 @@
 # Model application
 ###############################################################################
 
-import sys
 import os
-import network
-from vec4net import make_vec
+import sys
+
 import numpy as np
+
+from vietseg import network
+from vietseg.vec4net import make_vec
 
 # Replace this with your model's result
 JSON = '../var/30hidden-30epochs-10batch-0.5eta-5.0lambda-7window-100shape-3run.net'
 net = network.load(JSON)
 
 
-def _get_iob(arr):
+def get_iob(arr):
     d = {0: 'i', 1: 'o', 2: 'b'}
     n = np.argmax(arr)
     return d[n]
 
-def _classify(token_list):
+
+def classify(token_list):
     "Classify a list of token"
     result = []
     sen_vec = make_vec(token_list)
     for x in sen_vec:
-        result.append(_get_iob(net.feedforward(x)))
+        result.append(get_iob(net.feedforward(x)))
     return result
 
-def _make_words(token_list, iob_list):
+
+def make_words(token_list, iob_list):
     "Make segmented words from token list and corresponding iob list"
     if not iob_list: return
     t = token_list[0:1]
@@ -53,10 +57,11 @@ def _make_words(token_list, iob_list):
     if t: tokens.append(t)
     return ['_'.join(tok) for tok in tokens]
 
+
 def _test():
     tok = ['chủ', 'nhân', 'website', 'muốn', 'duy', 'trì', 'domain', '.com', 'phải', 'trả', '6,42', 'usd', '(', 'tăng', '7', '%', ')', ',', 'còn', '.net', 'sẽ', 'tốn', '3,85', 'usd', '(', 'tăng', '10', '%', ')', 'mỗi', 'năm', '.']
     iob = ['b', 'i', 'b', 'b', 'b', 'i', 'b', 'b', 'b', 'b', 'b', 'b', 'o', 'b', 'b', 'o', 'o', 'o', 'b', 'b', 'b', 'b', 'b', 'b', 'o', 'b', 'b', 'o', 'o', 'b', 'b', 'o']
-    return _make_words(tok, iob)
+    return make_words(tok, iob)
 
 if __name__ == '__main__':
     n_args = len(sys.argv)
@@ -64,7 +69,7 @@ if __name__ == '__main__':
         print("""
               VietSeg - Ver. 0.0.1
               ==================================
-              Usage: python3 vietseg.py <input file> <output file>
+              Usage: python3 main.py <input file> <output file>
                * The <input file> must be in UTF-8 encoding.
                * The segmented text will be written in the <output file>.
               ==================================
@@ -84,8 +89,8 @@ if __name__ == '__main__':
                 fo.write(line)
                 continue
             token_list = line.lower().split()
-            iob_list = _classify(token_list)
-            out_line = _make_words(in_line, iob_list)
+            iob_list = classify(token_list)
+            out_line = make_words(in_line, iob_list)
             fo.write(' '.join(out_line)+'\n')
 
 

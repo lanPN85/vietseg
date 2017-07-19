@@ -83,7 +83,7 @@ class Network():
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta, 
-            lmbda = 0.0, 
+            lmbda=0.0,
             evaluation_data=None, 
             monitor_evaluation_cost=False,
             monitor_evaluation_accuracy=False):
@@ -96,7 +96,10 @@ class Network():
         The method returns the list of accuracies on the evaluation data. 
         All values are evaluated at the end of each training epoch.
         """
-        if evaluation_data: n_data = len(evaluation_data)
+        if evaluation_data:
+            n_data = len(evaluation_data)
+        else:
+            n_data = 1
         n = len(training_data)
         evaluation_accuracy = []
         for j in range(epochs):
@@ -109,7 +112,7 @@ class Network():
                     mini_batch, eta, lmbda, len(training_data))
             print("Epoch %s training complete" % j)
             if monitor_evaluation_accuracy:
-                accuracy = self.accuracy(evaluation_data)
+                accuracy = self.accuracy(evaluation_data) if evaluation_data else 0
                 print("Accuracy on evaluation data: {0} / {1} <=> {2:.2f} %".\
                       format(accuracy, n_data, accuracy/n_data*100)
                 )

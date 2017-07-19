@@ -7,9 +7,10 @@ import numpy as np
 from gensim.models import Word2Vec
 
 # Load Word2Vec model from file, use your model's result or use mine
-MODEL = Word2Vec.load('../var/100features_10context_7minwords.vec')
+MODEL = Word2Vec.load('var/features_vlsp.vec')
 WINDOW = 7
-SHAPE = MODEL.syn0.shape[1]
+SHAPE = MODEL.wv.syn0.shape[1]
+
 
 def word2index(model, word):
     "Convert word to index using result from Word2Vec learning"
@@ -23,6 +24,7 @@ def word2index(model, word):
         result = 0.2 * np.random.uniform(-1, 1, SHAPE)
     return result
 
+
 def context_window(l):
     "Make context window for a given word, 'WINDOW' must be odd"
     l = list(l)
@@ -31,32 +33,39 @@ def context_window(l):
     assert len(out) == len(l)
     return out
 
+
 def context_matrix(model, conwin):
     "Return a list contain map element for each context window of 1 word"
     return [map(lambda x: word2index(model, x), win) for win in conwin]
 
+
 def context_vector(cm):
     "Convert context matrix to vector"
     return [np.squeeze(np.asarray(list(x))).reshape((WINDOW*SHAPE,1)) for x in cm]
+
 
 def iob_map(iob):
     "Convert i/o/b to vector"
     d = {'i': [1,0,0], 'o': [0,1,0], 'b': [0,0,1]}
     return np.asarray(d[iob]).reshape((3,1))
 
+
 def iob_vector(iob):
     "Make a vector for iob list"
     return map(iob_map, iob)
 
+
 def make_tuple(context_vector, iob_vector):
     "Pairing sentences and iob tag"
     return list(zip(context_vector, iob_vector))
+
 
 def make_vec(sen):
     "Make vector from a sentence for feeding to neural net directly"
     cw = context_window(sen)
     cm = context_matrix(MODEL, cw)
     return context_vector(cm)
+
 
 def make_list(sentences):
     "Make list for neural net learning"
