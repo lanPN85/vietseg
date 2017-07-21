@@ -14,5 +14,5 @@ if __name__ == '__main__':
                   lmbda=LAMBDA,
                   evaluation_data=test_data,
                   monitor_evaluation_accuracy=True)
-    net.save('../var/params.net')
-    print('Accuracy: %.2f' % acc)
+    net.save('var/params.net')
+    # print('Accuracy: %.2f' % acc)

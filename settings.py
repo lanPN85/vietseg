@@ -7,7 +7,7 @@ DOWN_SAMPLING = 1e-3
 
 # Tokenizer settings
 HIDDEN = 30
-EPOCHS = 5
+EPOCHS = 10
 MINI_BATCH_SIZE = 100
 ETA = 0.5
 LAMBDA = 5.0
